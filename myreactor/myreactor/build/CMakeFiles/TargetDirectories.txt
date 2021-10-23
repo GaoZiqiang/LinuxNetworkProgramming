@@ -1,0 +1,4 @@
+/home/gaoziqiang/CLionProjects/myreactor/myreactor/build/CMakeFiles/rebuild_cache.dir
+/home/gaoziqiang/CLionProjects/myreactor/myreactor/build/CMakeFiles/edit_cache.dir
+/home/gaoziqiang/CLionProjects/myreactor/myreactor/build/CMakeFiles/myreactorserver.dir
+/home/gaoziqiang/CLionProjects/myreactor/myreactor/build/CMakeFiles/client.dir
