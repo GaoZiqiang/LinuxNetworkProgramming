@@ -146,19 +146,20 @@ int main(int argc, char* argv[])
             // 处理客户端发来的数据
             else if (events[i].events & EPOLLIN)
             {
-                printf("接收到客户端 %d 数据\n", events[i].data.fd);
-                memset(users[sockfd].buf, 0, BUF_SIZE);// sockfd即clientfd
-                ret = recv(sockfd, users[sockfd].buf, BUF_SIZE - 1, 0);// 接收的数据保存到users[sockfd].buf
+                int clientfd = events[i].data.fd;
+                printf("接收到客户端 %d 数据\n", clientfd);
+                memset(users[clientfd].buf, 0, BUF_SIZE);// sockfd即clientfd
+                ret = recv(clientfd, users[clientfd].buf, BUF_SIZE - 1, 0);// 接收的数据保存到users[sockfd].buf
 //                printf("get %d bytes data from client %d: %s\n", ret, sockfd, users[sockfd].buf);
 
-                timer_node* timer = users[sockfd].timer;
+                timer_node* timer = users[clientfd].timer;
                 // 发生读错误
                 if (ret < 0)
                 {
                     if (errno != EAGAIN)
                     {
                         // 关闭该client sockfd
-                        timer_signal.cb_func(&users[sockfd], epollfd);
+                        timer_signal.cb_func(&users[clientfd], epollfd);
                         // 从timer_list链表中删除timer
                         if (timer)
                             timer_list.del_timer(timer);
@@ -167,14 +168,14 @@ int main(int argc, char* argv[])
                 // 对方已关闭连接
                 else if (ret == 0)
                 {
-                    timer_signal.cb_func(&users[sockfd], epollfd);
+                    timer_signal.cb_func(&users[clientfd], epollfd);
                     if (timer)
                         timer_list.del_timer(timer);
                 }
                 // 有数据可读
                 else
                 {
-                    printf("get %d bytes data from client %d: %s\n", ret, sockfd, users[sockfd].buf);
+                    printf("get %d bytes data from client %d: %s\n", ret, clientfd, users[clientfd].buf);
                     // 调整定时器
                     if (timer)
                     {
